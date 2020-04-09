@@ -63,28 +63,29 @@ class App extends Component {
     event.preventDefault();
 
     console.log('SUBMIT CREATURE');
+    const newStateConfig = {
+      // clear form inputs
+      newCreature: {
+        name: '',
+        origin: '',
+      },
+      // updating our list with new creature
+      creaturesList: [
+        // dump in everything from current creaturesList
+        ...this.state.creaturesList,
+        {
+          ...this.state.newCreature,
+          /// no additional props
+        }
+      ]
+    };
     // add the creature to the list
     this.setState(
-      {
-        // clear form inputs
-        newCreature: {
-          name: '',
-          origin: '',
-        },
-        // updating our list with new creature
-        creaturesList: [
-          // dump in everything from current creaturesList
-          ...this.state.creaturesList,
-          {
-            ...this.state.newCreature
-          }
-        ]
-      },
+      newStateConfig,
       () => {// callback for when state is updated
         console.log('New State:', this.state.creaturesList);
       }
     );
-    console.log('New State:', this.state.creaturesList);
   }
 
   render() {
