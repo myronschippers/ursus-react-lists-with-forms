@@ -6,8 +6,8 @@ class App extends Component {
   state = {
     // for tracking entered data on fields
     newCreature: {
-      name: 'Dragon',
-      origin: 'Chinese',
+      name: '',
+      origin: '',
     },
     // point of truth
     creaturesList: [
@@ -30,22 +30,61 @@ class App extends Component {
     ]
   }
 
-  changeNewCreatureName = (event) => {
+  // changeNewCreatureName = (event) => {
+  //   this.setState({
+  //     newCreature: {
+  //       ...this.state.newCreature, // dumps in previous / current state into new object
+  //       name: event.target.value,
+  //     }
+  //   });
+  // }
+
+  // changeNewCreatureOrigin = (event) => {
+  //   this.setState({
+  //     newCreature: {
+  //       ...this.state.newCreature,
+  //       origin: event.target.value,
+  //     }
+  //   });
+  // }
+
+  changeNewCreature = (event, creatureKey) => {
     this.setState({
       newCreature: {
-        ...this.state.newCreature, // dumps in previous / current state into new object
-        name: event.target.value,
+        ...this.state.newCreature,
+        [creatureKey]: event.target.value,
       }
     });
   }
 
-  changeNewCreatureOrigin = (event) => {
-    this.setState({
-      newCreature: {
-        ...this.state.newCreature,
-        origin: event.target.value,
+  // save new creature to the list
+  submitNewCreature = (event) => {
+    // stop page refresh
+    event.preventDefault();
+
+    console.log('SUBMIT CREATURE');
+    // add the creature to the list
+    this.setState(
+      {
+        // clear form inputs
+        newCreature: {
+          name: '',
+          origin: '',
+        },
+        // updating our list with new creature
+        creaturesList: [
+          // dump in everything from current creaturesList
+          ...this.state.creaturesList,
+          {
+            ...this.state.newCreature
+          }
+        ]
+      },
+      () => {// callback for when state is updated
+        console.log('New State:', this.state.creaturesList);
       }
-    });
+    );
+    console.log('New State:', this.state.creaturesList);
   }
 
   render() {
@@ -61,14 +100,15 @@ class App extends Component {
       <div>
         <Header />
 
-        <form className="container">
+        <form onSubmit={this.submitNewCreature} className="container">
           <label>
             <span>Name:</span>
             <input
               type="text"
               placeholder="Creature's Name"
               name="name"
-              onChange={this.changeNewCreatureName}
+              value={this.state.newCreature.name}
+              onChange={(event) => this.changeNewCreature(event, 'name')}
               required
             />
           </label>
@@ -78,7 +118,8 @@ class App extends Component {
               type="text"
               placeholder="Creature's Origin"
               name="origin"
-              onChange={this.changeNewCreatureOrigin}
+              value={this.state.newCreature.origin}
+              onChange={(event) => this.changeNewCreature(event, 'origin')}
               required
             />
           </label>
